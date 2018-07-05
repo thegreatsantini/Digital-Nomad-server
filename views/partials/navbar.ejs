@@ -1,0 +1,17 @@
+<br>
+<br>
+<br>
+<div class = "nav-center">
+	<div class = "row">
+		<div class = "col s12">
+			<a href = "/" class = "btn btn-info" id = "homeButton">Home</a>
+			<% if(!currentUser) {%>
+			<a href = "/auth/login" class = "btn btn-primary" id = "logInButton">Login</a>
+			<a href = "/auth/signup" class = "btn btn-success" id = "signUpButton">Sign Up</a>
+			<% } else { %>
+			<a href = "/auth/logout" class = "btn btn-warning" id = "logOutButton"><%=currentUser.name%>, Do you wanna log out?</a>
+			<a href = "/profile" class = "btn btn-danger" id = "profileButton">Profile</a>
+			<% } %>
+		</div>
+	</div>
+</div>
