@@ -26,7 +26,7 @@ var userSchema = new mongoose.Schema({
 });
 
 // Make a function that checks whether the password is correct
-userSchema.methods.isAuthenticated = function(password) {
+userSchema.methods.authenticated = function(password) {
 	//Compare(typedInPassword, actualPassword)
 	var isCorrectPassword = bcrypt.compareSync(password, this.password);
 	return isCorrectPassword ? this : false;
