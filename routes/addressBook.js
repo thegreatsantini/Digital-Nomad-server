@@ -7,42 +7,40 @@ var isLoggedIn = require('../middleware/isLoggedIn');
 var User = require('../models/user');
 var Contacts = require('../models/contacts');
 
-
-
+router.get('/test/:id', function (req, res) {
+	res.send(req.params.id)
+})
 // Render the page with the wishlist form
-router.get('/', isLoggedIn, function(req, res) {
-	Contacts.find({userId: req.user.id}, function (err, contacts) {
-		if(err){
-			console.log(err);
-		} else{
-			// console.log(wishes)
-			res.render('contacts', {contactList});
+router.get('/api/v1/users/:id', function (req, res) {
+	User.findById(req.params.id, function (error, user) {
+		if (error) res.status(404).send('couldn\'t GET user info');
+		else {
+			res.send(user.savedContacts)
 		}
-	})
-	
+	});
 });
+
 // Save a favorite hike to User's page
-router.post('/', function(req, res, next){
+router.post('/api/v1/contacts/:id/', function (req, res, next) {
+	console.log(req.body)
 	// results = JSON.parse(req.body);
-	console.log(req.body);
-	console.log(req.user);
 	var savedContact = req.body
 	savedContact.userId = req.user.id
-	Contact.create(req.body, function(err, person) {
-		if(!err){
+	Contact.create(req.body, function (err, person) {
+		if (!err) {
 			// res.render("/wishlist");
-		}else{
+		} else {
 			console.log(err);
 		}
 	});
 
 });
 
-router.delete('/:id', function(req, res){
-	Contacts.findByIdAndRemove(req.params.id, function(err, contacts){
-		if(err){
+router.delete('/:id', function (req, res) {
+	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
+		if (err) {
 			console.log(err);
-		}else {
+		} else {
 			res.send()
 		}
 	})
