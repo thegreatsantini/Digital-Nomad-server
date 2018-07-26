@@ -6,7 +6,7 @@ var addressSchema = new Schema({
   street: String,
   city: String,
   state: String,
-  zipcode: Number
+  zipcode: Number,
   userId: {
   	type: Schema.Types.ObjectId,
   	ref: 'User',
