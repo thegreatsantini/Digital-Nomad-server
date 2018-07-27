@@ -1,15 +1,16 @@
 var mongoose = require(
 	'mongoose');
 var bcrypt = require('bcrypt');
+var Contacts = require('./contacts');
 
 //Define what a use looks like in the database
-var addressSchema = new mongoose.Schema({
-	name: String,
-	street: String,
-	city: String,
-	state: String,
-	zipcode: Number
-});
+// var addressSchema = new mongoose.Schema({
+// 	name: String,
+// 	street: String,
+// 	city: String,
+// 	state: String,
+// 	zipcode: Number
+// });
 
 var userSchema = new mongoose.Schema({
 	name: String,
@@ -22,7 +23,7 @@ var userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	savedContacts: [addressSchema]
+	contacts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Contacts'}]
 });
 
 // Make a function that checks whether the password is correct
@@ -32,6 +33,9 @@ userSchema.methods.authenticated = function(password) {
 	return isCorrectPassword ? this : false;
 }
 
+// userSchema.methods.toJSON = function(){
+	// TODO: Remove password from JSON returned
+// }
 
 
 // Hash the password BEFORE saving a user to database
