@@ -15,4 +15,4 @@ var addressSchema = new Schema({
 });
 
 var Contacts = mongoose.model('Contacts', addressSchema);
-module.exports = Contacts
+module.exports = Contacts;
