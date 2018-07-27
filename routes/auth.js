@@ -11,7 +11,13 @@ router.post('/login', function (req, res) {
 
 	// first check if user exists
 	User.findOne({ email: req.body.email })
-		.then(function (user) {
+		.populate('contacts')
+		.exec(function (error, user) {
+			if(error){
+				console.log('err:', err)
+				return res.status(503).send('Database error');
+			}
+
 			// user not found, or password is incorrect
 			if (!user || !user.password) { return res.status(403).send('User not found'); }
 
@@ -22,11 +28,7 @@ router.post('/login', function (req, res) {
 			var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 			// send token & user info
 			res.send({ user: user, token: token });
-		})
-		.catch(function (err) {
-			console.log('err:', err)
-			res.status(503).send('Database error');
-		})
+		});
 });
 
 // POST /auth/signup route - create a user in the DB and then log them in
