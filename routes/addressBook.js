@@ -1,6 +1,8 @@
 // Include express 
+require('dotenv').config();
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
 // var mongoose = require('mongoose');
 var isLoggedIn = require('../middleware/isLoggedIn');
 // Include the user model!
@@ -22,18 +24,43 @@ router.get('/api/v1/users/:id', function (req, res) {
 
 // Save a favorite hike to User's page
 router.post('/api/v1/contacts/:id/', function (req, res, next) {
-	console.log(req.body)
+	
 	// results = JSON.parse(req.body);
-	var savedContact = req.body
-	savedContact.userId = req.user.id
-	Contact.create(req.body, function (err, person) {
-		if (!err) {
-			// res.render("/wishlist");
-		} else {
-			console.log(err);
+	// req.body.userId = req.params.id;
+	console.log("body is", req.body);
+
+	User.findById(req.params.id)
+	.populate('contacts')
+	.exec(function (error, user) {
+		if (error) {
+			console.log(error);
+			res.status(409).send('couldn\'t GET user info');
+		}
+		else {
+			req.body.userId = user._id;
+			var contact1 = new Contacts(req.body);
+			contact1.save();
+			user.contacts.push(contact1);
+			user.save().then(function(user2){
+				var token = jwt.sign(user2.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+				res.send(token);
+			})
+			.catch(function(err){
+				res.status(501).send("Save fail");
+			})
+			
 		}
 	});
 
+	// Contacts.create(req.body, function (err, person) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 		res.status(500).send("Something wrong Happened In POST addressbook");
+	// 	} else {
+		
+			
+	// 	}
+	// });
 });
 
 router.delete('/:id', function (req, res) {
