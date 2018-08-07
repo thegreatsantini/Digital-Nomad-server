@@ -7,41 +7,28 @@ const jwt = require('jsonwebtoken');
 // Include the user model!
 const User = require('../models/user');
 const Contacts = require('../models/contacts');
+const sentCards = require('../models/sentCards')
 
 router.get('/test/:id', function (req, res) {
 	res.send(req.params.id)
 })
-
-const createContactsArray = async (contacts) => {
-	let contactList = [];
-	for (let i = 0; i < contacts.length; i++) {
-		
-		await Contacts.findById({ _id: contacts[i] }, function(err, contact) {
-			if (err) { console.log('oh boy somthing happend') }
-			else if ( contact !== null ) {  
-				contactList.push(contact);
-			}
-		})
-	}
-	return contactList
-};
-
-router.get('/api/v1/contacts/:id', function (req, res) {
-
-	User.findById(req.params.id, async function (error, user) {
+// Render the page with the wishlist form
+router.get('/api/v1/users/:id', function (req, res) {
+	User.findById(req.params.id, function (error, user) {
 		if (error) res.status(404).send('couldn\'t GET user info');
 		else {
-			// create array of objects for users saved contacts
-			let userContacts = await createContactsArray(user.contacts)
-			
-			res.send(userContacts)
+			res.send(user.savedContacts)
 		}
 	});
 });
 
-
-router.post('/api/v1/contacts/:id/', function (req, res, next) {
+// Save a favorite hike to User's page
+router.post('/api/v1/:id/add/', function (req, res, next) {
 	
+	// results = JSON.parse(req.body);
+	// req.body.userId = req.params.id;
+	console.log("body is", req.body);
+
 	User.findById(req.params.id)
 	.populate('contacts')
 	.exec(function (error, user) {

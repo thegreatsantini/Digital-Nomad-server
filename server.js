@@ -41,7 +41,8 @@ app.get('/', function (req, res) {
 });
 
 app.use('/profile', require('./routes/profile'));
-app.use('/addressbook', require('./routes/addressBook'))
+app.use('/addressbook', require('./routes/addressBook'));
+app.use('/postCards',require('./routes/postCards'))
 
 // Set the port
 const PORT = process.env.PORT || 8080

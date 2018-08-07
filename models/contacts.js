@@ -7,12 +7,12 @@ var addressSchema = new Schema({
   city: String,
   state: String,
   zipcode: Number,
+  email: String,
   userId: {
-  	type: Schema.Types.ObjectId,
-  	ref: 'User',
-  	required: true
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 });
 
-var Contacts = mongoose.model('Contacts', addressSchema);
-module.exports = Contacts;
+module.exports = mongoose.model('Contacts', addressSchema);
