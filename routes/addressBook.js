@@ -1,34 +1,47 @@
 // Include express 
 require('dotenv').config();
-var express = require('express');
-var router = express.Router();
-var jwt = require('jsonwebtoken');
-// var mongoose = require('mongoose');
-var isLoggedIn = require('../middleware/isLoggedIn');
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+
 // Include the user model!
-var User = require('../models/user');
-var Contacts = require('../models/contacts');
+const User = require('../models/user');
+const Contacts = require('../models/contacts');
 
 router.get('/test/:id', function (req, res) {
 	res.send(req.params.id)
 })
-// Render the page with the wishlist form
-router.get('/api/v1/users/:id', function (req, res) {
-	User.findById(req.params.id, function (error, user) {
+
+const createContactsArray = async (contacts) => {
+	let contactList = [];
+	for (let i = 0; i < contacts.length; i++) {
+		
+		await Contacts.findById({ _id: contacts[i] }, function(err, contact) {
+			if (err) { console.log('oh boy somthing happend') }
+			else if ( contact !== null ) {  
+				contactList.push(contact);
+			}
+		})
+	}
+	return contactList
+};
+
+router.get('/api/v1/contacts/:id', function (req, res) {
+
+	User.findById(req.params.id, async function (error, user) {
 		if (error) res.status(404).send('couldn\'t GET user info');
 		else {
-			res.send(user.savedContacts)
+			// create array of objects for users saved contacts
+			let userContacts = await createContactsArray(user.contacts)
+			
+			res.send(userContacts)
 		}
 	});
 });
 
-// Save a favorite hike to User's page
+
 router.post('/api/v1/contacts/:id/', function (req, res, next) {
 	
-	// results = JSON.parse(req.body);
-	// req.body.userId = req.params.id;
-	console.log("body is", req.body);
-
 	User.findById(req.params.id)
 	.populate('contacts')
 	.exec(function (error, user) {
@@ -51,16 +64,6 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 			
 		}
 	});
-
-	// Contacts.create(req.body, function (err, person) {
-	// 	if (err) {
-	// 		console.log(err);
-	// 		res.status(500).send("Something wrong Happened In POST addressbook");
-	// 	} else {
-		
-			
-	// 	}
-	// });
 });
 
 router.delete('/:id', function (req, res) {
