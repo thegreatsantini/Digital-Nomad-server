@@ -12,10 +12,16 @@ router.get('/', (req, res) => {
 });
 
 // get specific user by ID from db
-router.get('/:id', (req, res) => {
+router.get('/api/v1/user/:id', (req, res) => {
     console.log("Received 'user/:id' GET request");
     db.findById(req.params.id, (err, user) => {
-        res.send(user);
+        if (err) {
+            console.log('something happened is profile GET');
+            res.send(err)
+        }
+        else {
+            res.send(user);
+        }
     })
 })
 
