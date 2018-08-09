@@ -3,17 +3,9 @@ var mongoose = require(
 var bcrypt = require('bcrypt');
 var Contacts = require('./contacts');
 
-//Define what a use looks like in the database
-// var addressSchema = new mongoose.Schema({
-// 	name: String,
-// 	street: String,
-// 	city: String,
-// 	state: String,
-// 	zipcode: Number
-// });
-
 var userSchema = new mongoose.Schema({
 	name: String,
+	avatar: String,
 	email: {
 		type: String,
 		required: true,

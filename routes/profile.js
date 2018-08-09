@@ -26,12 +26,13 @@ router.get('/api/v1/user/:id', (req, res) => {
 })
 
 // update prospective homebuyer's target city, state, & location coordinates
-router.put('/:id', (req, res) => {
-    console.log("Received 'user/:id' PUT request");
-    db.findByIdAndUpdate(req.params.id, { $set: req.body }, (err, user) => {
-        if (err) { res.status(403).send('PUT request failed') };
-        res.send(user);
-    })
+router.put('/api/v1/user/:id/edit/', (req, res) => {
+    console.log("Received 'user/:id' PUT request", req.body);
+    // db.findByIdAndUpdate(req.params.id, { $set: req.body }, (err, user) => {
+    //     if (err) { res.status(403).send('PUT request failed') };
+    //     console.log(user)
+    //     res.send(user);
+    // })
 })
 
 module.exports = router;
