@@ -26,6 +26,7 @@ const createContactsArray = async (contacts) => {
 	return contactList
 };
 
+// Get all contacts for one User
 router.get('/api/v1/contacts/:id', function (req, res) {
 
 	User.findById(req.params.id, async function (error, user) {
@@ -39,7 +40,19 @@ router.get('/api/v1/contacts/:id', function (req, res) {
 	});
 });
 
+// Get one contact from its :id
+router.get('/api/v1/contact/:id', function(req,res){
+	Contacts.findById( req.params.id, function(err, contact) {
+		if ( err ) {
+			res.send('Couldnt get contact', err);
+		}
+		else {
+			res.send(contact)
+		}
+	})
+});
 
+// Change route maybe
 router.post('/api/v1/contacts/:id/', function (req, res, next) {
 	
 	User.findById(req.params.id)
@@ -65,6 +78,17 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 		}
 	});
 });
+
+router.get('/api/v1/contacts/:id/update/:address/', async function(req, res) {
+	// Contacts.findByIdAndUpdate({_id:req.params.address}, function(err, contact){
+	// 	if(err) {
+	// 		console.log('Error in contact Update', err);
+	// 		res.send('Error in update Contact', err)
+	// 	} else {
+			res.send('This is the update route', req.body)
+	// 	}
+	// })
+})
 
 router.delete('/:id', function (req, res) {
 	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
