@@ -1,7 +1,8 @@
-var mongoose = require(
+const mongoose = require(
 	'mongoose');
-var bcrypt = require('bcrypt');
-var Contacts = require('./contacts');
+const bcrypt = require('bcrypt');
+const Contacts = require('./contacts');
+const SentCards = require('./sentCards');
 
 var userSchema = new mongoose.Schema({
 	name: String,
@@ -15,7 +16,13 @@ var userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	contacts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Contacts'}]
+	contacts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Contacts'}],
+	postCards: [
+		{ 
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "SentCards"
+		}
+	]
 });
 
 // Make a function that checks whether the password is correct
