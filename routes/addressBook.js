@@ -9,6 +9,7 @@ const User = require('../models/user');
 const Contacts = require('../models/contacts');
 
 router.get('/test/:id', function (req, res) {
+	console.log(req.params.id)
 	res.send(req.params.id)
 })
 
@@ -40,9 +41,10 @@ router.get('/api/v1/contacts/:id', function (req, res) {
 	});
 });
 
-// Get one contact from its :id
-router.get('/api/v1/contact/:id', function(req,res){
-	Contacts.findById( req.params.id, function(err, contact) {
+// Get one contact from its :id and update
+router.put('/api/v1/contact/update/:id/', function(req,res){
+	
+	Contacts.findByIdAndUpdate( req.params.id,req.body, function(err, contact) {
 		if ( err ) {
 			res.send('Couldnt get contact', err);
 		}
@@ -78,17 +80,6 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 		}
 	});
 });
-
-router.get('/api/v1/contacts/:id/update/:address/', async function(req, res) {
-	// Contacts.findByIdAndUpdate({_id:req.params.address}, function(err, contact){
-	// 	if(err) {
-	// 		console.log('Error in contact Update', err);
-	// 		res.send('Error in update Contact', err)
-	// 	} else {
-			res.send('This is the update route', req.body)
-	// 	}
-	// })
-})
 
 router.delete('/:id', function (req, res) {
 	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
