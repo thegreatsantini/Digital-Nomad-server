@@ -13,23 +13,26 @@ router.get('/test/:id', function (req, res) {
 	res.send(req.params.id)
 })
 // Render the page with the wishlist form
-router.get('/api/v1/users/:id', function (req, res) {
-
-	User.findById(req.params.id, function (error, user) {
+router.get('/api/v1/:id', function (req, res) {
+	console.log('*******************************')
+	sentCards.find({userId:req.params.id}, function (error, cards) {
 		if (error) res.status(404).send('couldn\'t GET user info');
 		else {
-			res.send(user.contacts)
+			console.log(cards)
+			res.send(cards)
 		}
 	});
 	
 });
 
-router.post('/api/v1/add/', async function(req, res){
-	console.log('**********************************',req.body)
-	const newCard = await (new sentCards(req.body)).save();
-	console.log('newCard',newCard)
-});
 
+router.post('/api/v1/:id/add/', async function(req, res){
+	const newCard = await (new sentCards(req.body)).save();	
+	await User.findById(req.params.id, function(err,user){
+		var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+		res.send(token);
+	})
+});
 
 // Save a favorite hike to User's page
 router.post('/api/v1/:id/add/', function (req, res, next) {

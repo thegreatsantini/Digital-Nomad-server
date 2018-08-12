@@ -17,12 +17,6 @@ var userSchema = new mongoose.Schema({
 		required: true,
 	},
 	contacts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Contacts'}],
-	postCards: [
-		{ 
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "SentCards"
-		}
-	]
 });
 
 // Make a function that checks whether the password is correct
