@@ -5,6 +5,7 @@ var postCardSchema = new Schema({
     recipients: [String],
     message: String,
     imgUrl: String,
+    location: String,
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
