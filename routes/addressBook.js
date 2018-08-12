@@ -70,6 +70,7 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 			contact1.save();
 			user.contacts.push(contact1);
 			user.save().then(function(user2){
+				console.log(user2.toJSON())
 				var token = jwt.sign(user2.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 				res.send(token);
 			})
@@ -81,8 +82,8 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 	});
 });
 
-router.delete('/:id', function (req, res) {
-	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
+router.delete('api/v1/:id/remove/:contact',async function (req, res) {
+	Contacts.findByIdAndRemove(req.params.contact, function (err, contacts) {
 		if (err) {
 			console.log(err);
 		} else {
