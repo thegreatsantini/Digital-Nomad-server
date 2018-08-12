@@ -14,7 +14,7 @@ router.get('/test/:id', function (req, res) {
 })
 // Render the page with the wishlist form
 router.get('/api/v1/:id', function (req, res) {
-	console.log('*******************************')
+	
 	sentCards.find({userId:req.params.id}, function (error, cards) {
 		if (error) res.status(404).send('couldn\'t GET user info');
 		else {
