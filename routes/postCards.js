@@ -1,4 +1,4 @@
-// Include express 
+// Include express
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
@@ -14,20 +14,18 @@ router.get('/test/:id', function (req, res) {
 })
 // Render the page with the wishlist form
 router.get('/api/v1/:id', function (req, res) {
-	
+
 	sentCards.find({userId:req.params.id}, function (error, cards) {
-		if (error) res.status(404).send('couldn\'t GET user info');
+		if (error) res.status(404).send('couldn\'t GET user cards');
 		else {
-			console.log(cards)
 			res.send(cards)
 		}
 	});
-	
 });
 
 
 router.post('/api/v1/:id/add/', async function(req, res){
-	const newCard = await (new sentCards(req.body)).save();	
+	const newCard = await (new sentCards(req.body)).save();
 	await User.findById(req.params.id, function(err,user){
 		var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 		res.send(token);
@@ -36,7 +34,7 @@ router.post('/api/v1/:id/add/', async function(req, res){
 
 // Save a favorite hike to User's page
 router.post('/api/v1/:id/add/', function (req, res, next) {
-	
+
 	// results = JSON.parse(req.body);
 	// req.body.userId = req.params.id;
 	console.log("body is", req.body);
@@ -60,7 +58,7 @@ router.post('/api/v1/:id/add/', function (req, res, next) {
 			.catch(function(err){
 				res.status(501).send("Save fail");
 			})
-			
+
 		}
 	});
 });
