@@ -58,7 +58,7 @@ router.put('/api/v1/contacts/update/:id/', function(req,res){
 
 // Change route maybe
 router.post('/api/v1/contacts/:id/', function (req, res, next) {
-
+	console.log('HELLO FROM SERVER', req.params.id)
 	User.findById(req.params.id)
 	.populate('contacts')
 	.exec(function (error, user) {

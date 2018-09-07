@@ -32,7 +32,7 @@ router.post('/api/v1/:id/add/', async function(req, res){
 	})
 });
 
-// Save a favorite hike to User's page
+// Save
 router.post('/api/v1/:id/add/', function (req, res, next) {
 
 	// results = JSON.parse(req.body);
