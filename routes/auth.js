@@ -67,8 +67,16 @@ router.post('/signup', function (req, res) {
 
 // This is checked on a browser refresh
 router.post('/me/from/token', function (req, res) {
-	// check header or url parameters or post parameters for token
-	res.send({ user: req.user });
+	User.findOne({ id: req.user.id })
+		.populate('contacts')
+		.exec(function (error, user) {
+			if(error){
+				console.log('err:', err)
+				return res.status(503).send('Database error');
+			}
+			
+			res.send({ user: user });
+		});
 });
 
 module.exports = router;
