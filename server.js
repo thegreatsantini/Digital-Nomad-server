@@ -19,15 +19,21 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+const getToken = function(req) {
+	// console.log('Authorization token, getting token');
+	// console.log(req.headers.authorization);
+	const headers = req.body.headers || req.headers;
+	const auth = headers.Authorization || headers.authorization;
+	if (auth && auth.split(' ')[0] === 'Bearer') {
+		return auth.split(' ')[1];
+	}
+	return null;
+}
+
 // Controllers
 app.use('/auth', expressJWT({
 	secret: process.env.JWT_SECRET,
-	getToken: function fromRequest(req) {
-		if (req.body.headers && req.body.headers.Authorization && req.body.headers.Authorization.split(' ')[0] === 'Bearer') {
-			return req.body.headers.Authorization.split(' ')[1];
-		}
-		return null;
-	}
+	getToken: getToken
 }).unless({
 	path: [
 		{ url: '/auth/login', methods: ['POST'] },
@@ -40,9 +46,9 @@ app.get('/', function (req, res) {
 	res.send('landing page');
 });
 
-app.use('/profile', require('./routes/profile'));
-app.use('/addressbook', require('./routes/addressBook'));
-app.use('/postcards',require('./routes/postCards'))
+app.use('/profile', expressJWT({secret: process.env.JWT_SECRET, getToken: getToken}), require('./routes/profile'));
+app.use('/addressbook', expressJWT({secret: process.env.JWT_SECRET, getToken: getToken}), require('./routes/addressBook'));
+app.use('/postcards', expressJWT({secret: process.env.JWT_SECRET, getToken: getToken}), require('./routes/postCards'))
 
 // Set the port
 const PORT = process.env.PORT || 8080
