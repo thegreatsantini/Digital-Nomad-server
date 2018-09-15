@@ -51,7 +51,7 @@ app.use('/addressbook', expressJWT({secret: process.env.JWT_SECRET, getToken: ge
 app.use('/postcards', expressJWT({secret: process.env.JWT_SECRET, getToken: getToken}), require('./routes/postCards'))
 
 // Set the port
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 80
 
 // Listen
 app.listen(PORT, () => {
