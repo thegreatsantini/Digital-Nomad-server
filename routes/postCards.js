@@ -25,6 +25,7 @@ router.get('/api/v1/:id', function (req, res) {
 
 
 router.post('/api/v1/:id/add/', async function(req, res){
+	console.log('******************************')
 	const newCard = await (new sentCards(req.body)).save();
 	await User.findById(req.params.id, function(err,user){
 		var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
@@ -33,35 +34,35 @@ router.post('/api/v1/:id/add/', async function(req, res){
 });
 
 // Save
-router.post('/api/v1/:id/add/', function (req, res, next) {
+// router.post('/api/v1/:id/add/', function (req, res, next) {
 
-	// results = JSON.parse(req.body);
-	// req.body.userId = req.params.id;
-	console.log("body is", req.body);
+// 	// results = JSON.parse(req.body);
+// 	// req.body.userId = req.params.id;
+// 	console.log("body is", req.body);
 
-	User.findById(req.params.id)
-	.populate('contacts')
-	.exec(function (error, user) {
-		if (error) {
-			console.log(error);
-			res.status(409).send('couldn\'t GET user info');
-		}
-		else {
-			req.body.userId = user._id;
-			var contact1 = new Contacts(req.body);
-			contact1.save();
-			user.contacts.push(contact1);
-			user.save().then(function(user2){
-				var token = jwt.sign(user2.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
-				res.send(token);
-			})
-			.catch(function(err){
-				res.status(501).send("Save fail");
-			})
+// 	User.findById(req.params.id)
+// 	.populate('contacts')
+// 	.exec(function (error, user) {
+// 		if (error) {
+// 			console.log(error);
+// 			res.status(409).send('couldn\'t GET user info');
+// 		}
+// 		else {
+// 			req.body.userId = user._id;
+// 			var contact1 = new Contacts(req.body);
+// 			contact1.save();
+// 			user.contacts.push(contact1);
+// 			user.save().then(function(user2){
+// 				var token = jwt.sign(user2.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+// 				res.send(token);
+// 			})
+// 			.catch(function(err){
+// 				res.status(501).send("Save fail");
+// 			})
 
-		}
-	});
-});
+// 		}
+// 	});
+// });
 
 router.delete('/:id', function (req, res) {
 	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
