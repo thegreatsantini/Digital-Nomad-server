@@ -11,7 +11,7 @@ var app = express();
 
 // Connect to the database
 
-mongoose.connect('mongodb://localhost:27017/digitalNomad', { useNewUrlParser: true });
+mongoose.connect('mongodb://superuser:Ubatuba!22@ds051923.mlab.com:51923/digital-nomad', { useNewUrlParser: true });
 
 // Set up middleware
 app.use(logger('dev'));
@@ -51,7 +51,7 @@ app.use('/addressbook', expressJWT({secret: process.env.JWT_SECRET, getToken: ge
 app.use('/postcards', expressJWT({secret: process.env.JWT_SECRET, getToken: getToken}), require('./routes/postCards'))
 
 // Set the port
-const PORT = process.env.PORT || 80
+const PORT = 8080
 
 // Listen
 app.listen(PORT, () => {
