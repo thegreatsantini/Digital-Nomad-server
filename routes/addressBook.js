@@ -30,13 +30,14 @@ const createContactsArray = async (contacts) => {
 
 // Get all contacts for one User
 router.get('/api/v1/contacts/:id', function (req, res) {
-	console.log('************', req.params.id)
+	console.log('getting contacts', req.params.id)
 	User.findById(req.params.id, async function (error, user) {
 		if (error) res.status(404).send('couldn\'t GET user info');
 		else {
 			// create array of objects for users saved contacts
 			let userContacts = await createContactsArray(user.contacts)
 			// console.log(userContacts)
+			console.log('userContacts', userContacts)	
 			res.send(userContacts)
 		}
 	});
@@ -63,7 +64,6 @@ router.put('/api/v1/contacts/update/:id/', function (req, res) {
 
 // Change route maybe
 router.post('/api/v1/contacts/:id/', function (req, res, next) {
-	console.log('HELLO FROM SERVER', req.params.id)
 	User.findById(req.params.id)
 		.populate('contacts')
 		.exec(function (error, user) {
@@ -84,7 +84,6 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 					.catch(function (err) {
 						res.status(501).send("Save fail");
 					})
-
 			}
 		});
 });

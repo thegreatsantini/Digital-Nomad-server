@@ -27,7 +27,7 @@ userSchema.methods.authenticated = function(password) {
 }
 
 // userSchema.methods.toJSON = function(){
-	// TODO: Remove password from JSON returned
+	
 // }
 
 

@@ -8,13 +8,13 @@ var User = require('../models/user');
 // POST /auth/login route - returns a JWT
 router.post('/login', function (req, res) {
 	console.log('/auth/login POST route');
-
+	
 	// first check if user exists
 	User.findOne({ email: req.body.email })
 		.populate('contacts')
 		.exec(function (error, user) {
 			if (error) {
-				console.log('err:', err)
+				console.log('err:', error)
 				return res.status(503).send('Database error');
 			}
 
@@ -27,7 +27,7 @@ router.post('/login', function (req, res) {
 			// password is valid; create token
 			var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 			// send token & user info
-			res.send({ user: user, token: token });
+			res.send({ token: token });
 		});
 });
 
@@ -51,7 +51,7 @@ router.post('/signup', function (req, res) {
 					var token = jwt.sign(createdUser.toJSON(), process.env.JWT_SECRET, {
 						expiresIn: 60 * 60 * 24 // 24 hours, in seconds
 					});
-					res.send({ user: createdUser, token: token });
+					res.send({ token: token });
 				})
 				.catch(function (err) {
 					console.log('err:', err);
@@ -67,14 +67,16 @@ router.post('/signup', function (req, res) {
 
 // This is checked on a browser refresh
 router.post('/me/from/token', function (req, res) {
-		User.findOne({ id: req.user.id })
+	// console.log('req.user', req.user);
+	// console.log('req.user.id', req.user._id);
+		User.findOne({ _id: req.user._id })
 			.populate('contacts')
 			.exec(function (error, user) {
 				if(error){
 					console.log('err:', err)
 					return res.status(503).send('Database error');
 				}
-
+				// console.log('user found by server is', user);
 				res.send({ user: user });
 			});
 })
