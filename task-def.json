@@ -1,0 +1,18 @@
+{
+    "family": "digitalnomad",
+    "containerDefinitions": [
+        {
+            "name": "digitial_nomad_api",
+            "image": "916574797959.dkr.ecr.us-east-1.amazonaws.com/digitial_nomad_api:latest",
+            "cpu": 10,
+            "memory": 500,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 80
+                }
+            ],
+            "essential": true
+        }
+    ]
+}
