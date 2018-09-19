@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-
+const nodemailer = require('nodemailer');
 // Include the user model!
 const User = require('../models/user');
 const Contacts = require('../models/contacts');
@@ -15,7 +15,7 @@ router.get('/test/:id', function (req, res) {
 // Render the page with the wishlist form
 router.get('/api/v1/:id', function (req, res) {
 
-	sentCards.find({userId:req.params.id}, function (error, cards) {
+	sentCards.find({ userId: req.params.id }, function (error, cards) {
 		if (error) res.status(404).send('couldn\'t GET user cards');
 		else {
 			res.send(cards)
@@ -23,11 +23,42 @@ router.get('/api/v1/:id', function (req, res) {
 	});
 });
 
+// username qecs6s3ojedix5py@ethereal.email
+// password jsR6XsEvw6Y4zEgtnT 
 
-router.post('/api/v1/:id/add/', async function(req, res){
-	console.log('******************************')
-	const newCard = await (new sentCards(req.body)).save();
-	await User.findById(req.params.id, function(err,user){
+const sendEmail = (data) => {
+console.log(process.env.EMAIL_USER)
+console.log(process.env.EMAIL_PASSWORD)
+
+	var transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: `${process.env.EMAIL_USER}`,
+			pass: `${process.env.EMAIL_PASSWORD}`
+		}
+	});
+
+	var mailOptions = {
+		from: process.env.EMAIL_USER,
+		to: data.recipients,
+		subject: 'You recieved a new post card!',
+		text: data.message
+	};
+
+	transporter.sendMail(mailOptions, function (error, info) {
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Email sent: ' + info.response);
+		}
+	});
+	return true
+}
+
+router.post('/api/v1/:id/add/', async function (req, res) {
+	await sendEmail(req.body)
+	await (new sentCards(req.body)).save();
+	await User.findById(req.params.id, function (err, user) {
 		var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 		res.send(token);
 	})

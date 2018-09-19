@@ -36,8 +36,7 @@ router.get('/api/v1/contacts/:id', function (req, res) {
 		else {
 			// create array of objects for users saved contacts
 			let userContacts = await createContactsArray(user.contacts)
-			// console.log(userContacts)
-			console.log('userContacts', userContacts)	
+			// console.log(userContacts)	
 			res.send(userContacts)
 		}
 	});
