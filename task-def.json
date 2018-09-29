@@ -2,6 +2,12 @@
     "family": "digitalnomad",
     "containerDefinitions": [
         {
+            "environment": [
+                {"name": "JWT_SECRET", "value": "cheesypoofs"},
+                {"name": "PORT", "value": "8080"},
+                {"name": "EMAIL_USER", "value": "digitalnomad.postcard@gmail.com"},
+                {"name": "EMAIL_PASSWORD", "value": "TrustNo!1"}
+            ],
             "name": "digitial_nomad_api",
             "image": "916574797959.dkr.ecr.us-east-1.amazonaws.com/digitial_nomad_api:latest",
             "cpu": 10,
