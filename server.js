@@ -11,7 +11,9 @@ var app = express();
 
 // Connect to the database
 
-mongoose.connect('mongodb://superuser:Ubatuba!22@ds051923.mlab.com:51923/digital-nomad', { useNewUrlParser: true });
+// mongodb://superuser:Ubatuba!22@ds051923.mlab.com:51923/digital-nomad
+
+mongoose.connect(`${process.env.DB_URI}`, { useNewUrlParser: true });
 
 // Set up middleware
 app.use(logger('dev'));

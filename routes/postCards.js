@@ -12,7 +12,7 @@ const sentCards = require('../models/sentCards')
 router.get('/test/:id', function (req, res) {
 	res.send(req.params.id)
 })
-// Render the page with the wishlist form
+
 router.get('/api/v1/:id', function (req, res) {
 
 	sentCards.find({ userId: req.params.id }, function (error, cards) {
@@ -22,9 +22,6 @@ router.get('/api/v1/:id', function (req, res) {
 		}
 	});
 });
-
-// username qecs6s3ojedix5py@ethereal.email
-// password jsR6XsEvw6Y4zEgtnT 
 
 const sendEmail = (data) => {
 console.log(process.env.EMAIL_USER)
