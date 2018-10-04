@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 // Include the user model!
 const User = require('../models/user');
 const Contacts = require('../models/contacts');
-const sentCards = require('../models/sentCards')
+const SentCards = require('../models/sentCards')
 
 router.get('/test/:id', function (req, res) {
 	res.send(req.params.id)
@@ -15,7 +15,7 @@ router.get('/test/:id', function (req, res) {
 
 router.get('/api/v1/:id', function (req, res) {
 
-	sentCards.find({ userId: req.params.id }, function (error, cards) {
+	SentCards.find({ userId: req.params.id }, function (error, cards) {
 		if (error) res.status(404).send('couldn\'t GET user cards');
 		else {
 			res.send(cards)
@@ -24,8 +24,6 @@ router.get('/api/v1/:id', function (req, res) {
 });
 
 const sendEmail = (data) => {
-console.log(process.env.EMAIL_USER)
-console.log(process.env.EMAIL_PASSWORD)
 
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -54,7 +52,7 @@ console.log(process.env.EMAIL_PASSWORD)
 
 router.post('/api/v1/:id/add/', async function (req, res) {
 	await sendEmail(req.body)
-	await (new sentCards(req.body)).save();
+	await (new SentCards(req.body)).save();
 	await User.findById(req.params.id, function (err, user) {
 		var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
 		res.send(token);
@@ -92,12 +90,17 @@ router.post('/api/v1/:id/add/', async function (req, res) {
 // 	});
 // });
 
-router.delete('/:id', function (req, res) {
-	Contacts.findByIdAndRemove(req.params.id, function (err, contacts) {
+router.delete('/api/v1/:id/remove/:postCardId', function (req, res) {
+	SentCards.findByIdAndRemove(req.params.postCardId, function (err, postCard) {
 		if (err) {
 			console.log(err);
 		} else {
-			res.send()
+			SentCards.find({ userId: req.params.id }, function (error, cards) {
+				if (error) res.status(404).send('couldn\'t GET user cards');
+				else {
+					res.send(cards)
+				}
+			});
 		}
 	})
 });
