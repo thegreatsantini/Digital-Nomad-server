@@ -51,10 +51,10 @@ router.put('/api/v1/contacts/update/:id/', function (req, res) {
 			res.send('Couldnt get contact', err);
 		}
 		else {
-			console.log('**************', req.params.id)
+			// console.log('**************', req.params.id)
 			// User.findById(req.params.id, function (err, user) {
 			// 	var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
-				// res.send(token);
+			// res.send(token);
 			// })
 			res.send(contact)
 		}
@@ -87,14 +87,26 @@ router.post('/api/v1/contacts/:id/', function (req, res, next) {
 		});
 });
 
-router.delete('api/v1/:id/remove/:contact', async function (req, res) {
-	Contacts.findByIdAndRemove(req.params.contact, function (err, contacts) {
-		if (err) {
-			console.log(err);
-		} else {
-			res.send()
-		}
+router.delete('/api/v1/:id/remove/:contactId', async function (req, res) {
+	User.findById(req.params.id, async (err, user)=>{
+		let contactsArr = user.contacts;
+		contactsArr.splice(contactsArr.indexOf(req.params.contactId), 1);
+		user.save();
+
+		const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+		console.log(token)
+		res.send(token);
 	})
+	// Contacts.findByIdAndRemove({ _id: req.params.contactId }, function (err, contact) {
+	// 	if (err) {
+	// 		console.log(err);
+	// 	} else {
+
+	// 		const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+	// 		console.log(token)
+	// 		res.send(token);
+	// 	}
+	// })
 });
 
 
